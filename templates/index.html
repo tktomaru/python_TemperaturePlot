@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var dataTable= new google.visualization.DataTable();
+        dataTable.addColumn('datetime','DateTime');
+        dataTable.addColumn('number','Temp1');
+        dataTable.addColumn('number','Temp2');
+        dataTable.addRows([
+        {% for record in temp_list %}[new Date("{{record.date}}"),{{record.temp}}, {{record.temp2}}],
+        {% endfor %}
+        ]);
+        // グラフのオプションを設定
+        var options = {
+          title: "Temperature"
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(dataTable, options);
+      }
+    </script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var dataTable= new google.visualization.DataTable();
+        dataTable.addColumn('datetime','DateTime');
+        dataTable.addColumn('number','humidity');
+        dataTable.addRows([
+        {% for record in temp_list %}[new Date("{{record.date}}"),{{record.humidity}}],
+        {% endfor %}
+        ]);
+        // グラフのオプションを設定
+        var options = {
+          title: "Humidity"
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div_humidity'));
+        chart.draw(dataTable, options);
+      }
+    </script>
+{% endblock %}
+{% block inputdate %}
+ <form action="/post" method="post" >
+<table border="1" cellpadding="5" cellspacing="0">
+<tr><th>Start Date</th><th>End Date</th></tr>
+<tr>
+<td>
+    <input type="date" name="date_start"  list="data_table"  style="width:150px;height:150px" >
+    <datalist id="data_table">
+       {% for record in date_list %}
+    <option value="{{record}}">{{record}}</option>
+       {% endfor %}
+    </datalist>
+</td>
+<td>
+    <input type="date" name="date_end"  list="data_table"  style="width:150px;height:150px" >
+    <datalist id="data_table">
+       {% for record in date_list %}
+    <option value="{{record}}">{{record}}</option>
+       {% endfor %}
+    </datalist>
+</td>
+</tr>
+</table>
+   <input type="submit" name="" value="SUBMIT" style="width:200px;height:100px">
+</form>
+{% endblock %}
